@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: 'skeleton'
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+  datasource:
+    driver-class-name: 'org.postgresql.Driver'
+    url: 'jdbc:postgresql://localhost:5432/postgres'
+    username: 'test'
+    password: 'test'
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: 'create'
+    properties:
+      hibernate:
+        dialect: 'org.hibernate.dialect.PostgreSQLDialect'
+app:
+  allowed-origins:
+    - 'http://localhost:5173'
+  base-url-to-products: 'http://localhost:8080/products'
