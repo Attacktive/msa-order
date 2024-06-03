@@ -14,7 +14,7 @@ public class ResponseEntityUtils {
 	public static <T> T getBody(@Nullable ResponseEntity<T> responseEntity) {
 		var body = Optional.ofNullable(responseEntity)
 			.map(ResponseEntity::getBody)
-			.orElseThrow(() -> new NullPointerException("The response body retrieved by WebClient is null!"));
+			.orElseThrow(() -> new NullPointerException("The response retrieved by WebClient is null!"));
 
 		return Objects.requireNonNull(body, "The response body retrieved by WebClient is null!");
 	}
