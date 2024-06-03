@@ -1,5 +1,6 @@
 package com.github.attacktive.msaorder.order.api.util;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import lombok.experimental.UtilityClass;
@@ -15,10 +16,6 @@ public class ResponseEntityUtils {
 			.map(ResponseEntity::getBody)
 			.orElseThrow(() -> new NullPointerException("The response body retrieved by WebClient is null!"));
 
-		if (body == null) {
-			throw new NullPointerException("The response body retrieved by WebClient is null!");
-		}
-
-		return body;
+		return Objects.requireNonNull(body, "The response body retrieved by WebClient is null!");
 	}
 }
