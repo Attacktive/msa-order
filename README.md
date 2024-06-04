@@ -22,3 +22,4 @@ Another microservice about 'Products' can be found [here](https://github.com/Att
 ## Food for Thoughts
 
 - Currently, the stock doesn't matter at all
+- Needs tests probably with mocking
