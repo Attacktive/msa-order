@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.api.configuration;
+package com.github.attacktive.msaorder.order.application.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
