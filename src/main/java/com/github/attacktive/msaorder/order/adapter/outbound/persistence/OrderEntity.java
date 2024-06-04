@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.repository.persistence;
+package com.github.attacktive.msaorder.order.adapter.outbound.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.github.attacktive.msaorder.order.api.request.OrderRequest;
+import com.github.attacktive.msaorder.order.application.request.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
 import lombok.NoArgsConstructor;
 

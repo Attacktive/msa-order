@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.api.request;
+package com.github.attacktive.msaorder.order.application.request;
 
 import org.springframework.lang.Nullable;
 

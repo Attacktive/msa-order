@@ -1,13 +1,12 @@
-package com.github.attacktive.msaorder.order.api;
+package com.github.attacktive.msaorder.order.application;
 
 import java.util.List;
 import javax.validation.Valid;
 
-import com.github.attacktive.msaorder.order.api.request.ChangeOrderRequest;
-import com.github.attacktive.msaorder.order.api.request.OrderProductRequest;
-import com.github.attacktive.msaorder.order.api.response.OrderResponse;
-import com.github.attacktive.msaorder.order.domain.Order;
-import com.github.attacktive.msaorder.order.service.OrderUseCase;
+import com.github.attacktive.msaorder.order.application.request.ChangeOrderRequest;
+import com.github.attacktive.msaorder.order.application.request.OrderProductRequest;
+import com.github.attacktive.msaorder.order.application.response.OrderResponse;
+import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

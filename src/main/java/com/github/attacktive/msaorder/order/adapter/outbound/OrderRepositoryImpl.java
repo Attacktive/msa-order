@@ -1,12 +1,13 @@
-package com.github.attacktive.msaorder.order.repository;
+package com.github.attacktive.msaorder.order.adapter.outbound;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.github.attacktive.msaorder.order.api.request.OrderRequest;
+import com.github.attacktive.msaorder.order.adapter.outbound.persistence.OrderEntity;
+import com.github.attacktive.msaorder.order.adapter.outbound.persistence.OrderJpaRepository;
+import com.github.attacktive.msaorder.order.application.request.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
-import com.github.attacktive.msaorder.order.repository.persistence.OrderEntity;
-import com.github.attacktive.msaorder.order.repository.persistence.OrderJpaRepository;
+import com.github.attacktive.msaorder.order.port.outbound.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

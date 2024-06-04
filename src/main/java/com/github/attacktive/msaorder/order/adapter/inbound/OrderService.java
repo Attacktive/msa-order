@@ -1,17 +1,18 @@
-package com.github.attacktive.msaorder.order.service;
+package com.github.attacktive.msaorder.order.adapter.inbound;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.attacktive.msaorder.order.api.exception.NoSuchProductException;
-import com.github.attacktive.msaorder.order.api.request.ChangeOrderRequest;
-import com.github.attacktive.msaorder.order.api.request.OrderProductRequest;
-import com.github.attacktive.msaorder.order.api.request.OrderRequest;
-import com.github.attacktive.msaorder.order.api.response.OrderResponse;
-import com.github.attacktive.msaorder.order.api.response.Product;
-import com.github.attacktive.msaorder.order.api.util.ResponseEntityUtils;
+import com.github.attacktive.msaorder.order.application.exception.NoSuchProductException;
+import com.github.attacktive.msaorder.order.application.request.ChangeOrderRequest;
+import com.github.attacktive.msaorder.order.application.request.OrderProductRequest;
+import com.github.attacktive.msaorder.order.application.request.OrderRequest;
+import com.github.attacktive.msaorder.order.application.response.OrderResponse;
+import com.github.attacktive.msaorder.order.application.response.Product;
+import com.github.attacktive.msaorder.order.application.util.ResponseEntityUtils;
 import com.github.attacktive.msaorder.order.domain.Order;
-import com.github.attacktive.msaorder.order.repository.OrderRepository;
+import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;
+import com.github.attacktive.msaorder.order.port.outbound.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
