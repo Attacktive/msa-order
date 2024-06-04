@@ -12,7 +12,7 @@ import com.github.attacktive.msaorder.order.application.response.Product;
 import com.github.attacktive.msaorder.order.application.util.ResponseEntityUtils;
 import com.github.attacktive.msaorder.order.domain.Order;
 import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;
-import com.github.attacktive.msaorder.order.port.outbound.OrderRepository;
+import com.github.attacktive.msaorder.order.port.outbound.OrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,12 +23,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderService implements OrderUseCase {
-	private final OrderRepository orderRepository;
+	private final OrderPort orderPort;
 	private final WebClient webClient;
 
 	@Override
 	public List<OrderResponse> getOrders() {
-		var orders = orderRepository.findAll();
+		var orders = orderPort.findAll();
 
 		var productIds = orders.stream()
 			.map(Order::productId)
@@ -49,7 +49,7 @@ public class OrderService implements OrderUseCase {
 
 		var products = ResponseEntityUtils.getBody(productsResponse);
 
-		return orderRepository.findAll()
+		return orderPort.findAll()
 			.stream()
 			.map(order -> {
 				var product = products.stream()
@@ -64,7 +64,7 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public OrderResponse getOrder(long id) {
-		return orderRepository.findById(id)
+		return orderPort.findById(id)
 			.map(order -> {
 				var productResponse = webClient.get()
 					.uri(uriBuilder -> uriBuilder
@@ -87,28 +87,28 @@ public class OrderService implements OrderUseCase {
 	@Override
 	public OrderResponse orderProduct(OrderProductRequest orderProductRequest) {
 		var product = retrieveProduct(orderProductRequest);
-		var order = orderRepository.save(orderProductRequest);
+		var order = orderPort.save(orderProductRequest);
 		return new OrderResponse(order.id(), product);
 	}
 
 	@Override
 	public OrderResponse changeOrder(long id, ChangeOrderRequest changeOrderRequest) {
-		var productId = orderRepository.findById(id)
+		var productId = orderPort.findById(id)
 			.map(Order::id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
 		var product = retrieveProduct(changeOrderRequest);
-		var order = orderRepository.save(changeOrderRequest.withId(productId));
+		var order = orderPort.save(changeOrderRequest.withId(productId));
 
 		return new OrderResponse(order.id(), product);
 	}
 
 	@Override
 	public void deleteOrder(long id) {
-		orderRepository.findById(id)
+		orderPort.findById(id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
-		orderRepository.deleteById(id);
+		orderPort.deleteById(id);
 	}
 
 	private Product retrieveProduct(OrderRequest orderRequest) {

@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.github.attacktive.msaorder.order.application.request.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
 
-public interface OrderRepository {
+public interface OrderPort {
 	Optional<Order> findById(long id);
 
 	List<Order> findAll();
