@@ -9,7 +9,7 @@ import com.github.attacktive.msaorder.order.application.request.OrderProductRequ
 import com.github.attacktive.msaorder.order.application.request.OrderRequest;
 import com.github.attacktive.msaorder.order.application.response.OrderResponse;
 import com.github.attacktive.msaorder.order.application.response.Product;
-import com.github.attacktive.msaorder.order.application.util.ResponseEntityUtils;
+import com.github.attacktive.msaorder.common.util.ResponseEntityUtils;
 import com.github.attacktive.msaorder.order.domain.Order;
 import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;
 import com.github.attacktive.msaorder.order.port.outbound.OrderPort;

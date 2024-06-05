@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application.configuration;
+package com.github.attacktive.msaorder.common.configuration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
