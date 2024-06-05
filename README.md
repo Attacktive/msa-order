@@ -18,9 +18,3 @@ Another microservice about 'Products' can be found [here](https://github.com/Att
 - changes an order
   - an order can't be made with non-existing product
 - deletes an order
-
-## Food for Thoughts
-
-- The domain layer has a single record without a method. Am I on the right track?
-- Currently, the stock doesn't matter at all
-- Needs tests probably with mocking
