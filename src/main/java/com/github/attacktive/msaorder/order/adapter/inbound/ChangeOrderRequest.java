@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application.request;
+package com.github.attacktive.msaorder.order.adapter.inbound;
 
 import javax.validation.constraints.NotNull;
 

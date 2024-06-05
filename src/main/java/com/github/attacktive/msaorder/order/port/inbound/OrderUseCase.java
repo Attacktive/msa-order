@@ -2,9 +2,9 @@ package com.github.attacktive.msaorder.order.port.inbound;
 
 import java.util.List;
 
-import com.github.attacktive.msaorder.order.application.request.ChangeOrderRequest;
-import com.github.attacktive.msaorder.order.application.request.OrderProductRequest;
-import com.github.attacktive.msaorder.order.application.response.OrderResponse;
+import com.github.attacktive.msaorder.order.adapter.inbound.ChangeOrderRequest;
+import com.github.attacktive.msaorder.order.adapter.inbound.OrderProductRequest;
+import com.github.attacktive.msaorder.order.adapter.outbound.OrderResponse;
 
 public interface OrderUseCase {
 	List<OrderResponse> getOrders();

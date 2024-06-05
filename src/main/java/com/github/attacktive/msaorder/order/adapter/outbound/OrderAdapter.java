@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.github.attacktive.msaorder.order.adapter.outbound.persistence.OrderEntity;
 import com.github.attacktive.msaorder.order.adapter.outbound.persistence.OrderRepository;
-import com.github.attacktive.msaorder.order.application.request.OrderRequest;
+import com.github.attacktive.msaorder.order.adapter.inbound.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
 import com.github.attacktive.msaorder.order.port.outbound.OrderPort;
 import lombok.RequiredArgsConstructor;

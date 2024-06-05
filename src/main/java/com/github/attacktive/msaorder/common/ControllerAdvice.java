@@ -2,8 +2,8 @@ package com.github.attacktive.msaorder.common;
 
 import javax.xml.bind.ValidationException;
 
-import com.github.attacktive.msaorder.order.application.exception.NoSuchProductException;
-import com.github.attacktive.msaorder.order.application.response.ErrorResponse;
+import com.github.attacktive.msaorder.order.adapter.NoSuchProductException;
+import com.github.attacktive.msaorder.order.adapter.outbound.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
