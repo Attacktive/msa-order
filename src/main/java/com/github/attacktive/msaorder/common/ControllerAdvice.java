@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application;
+package com.github.attacktive.msaorder.common;
 
 import javax.xml.bind.ValidationException;
 

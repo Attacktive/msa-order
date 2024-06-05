@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application.util;
+package com.github.attacktive.msaorder.common.util;
 
 import java.util.Objects;
 import java.util.Optional;
