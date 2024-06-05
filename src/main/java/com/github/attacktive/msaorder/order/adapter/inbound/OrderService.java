@@ -3,12 +3,9 @@ package com.github.attacktive.msaorder.order.adapter.inbound;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.attacktive.msaorder.order.application.exception.NoSuchProductException;
-import com.github.attacktive.msaorder.order.application.request.ChangeOrderRequest;
-import com.github.attacktive.msaorder.order.application.request.OrderProductRequest;
-import com.github.attacktive.msaorder.order.application.request.OrderRequest;
-import com.github.attacktive.msaorder.order.application.response.OrderResponse;
-import com.github.attacktive.msaorder.order.application.response.Product;
+import com.github.attacktive.msaorder.order.adapter.NoSuchProductException;
+import com.github.attacktive.msaorder.order.adapter.outbound.OrderResponse;
+import com.github.attacktive.msaorder.order.adapter.outbound.Product;
 import com.github.attacktive.msaorder.common.util.ResponseEntityUtils;
 import com.github.attacktive.msaorder.order.domain.Order;
 import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;

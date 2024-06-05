@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.github.attacktive.msaorder.order.application.request.OrderRequest;
+import com.github.attacktive.msaorder.order.adapter.inbound.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
 import lombok.NoArgsConstructor;
 

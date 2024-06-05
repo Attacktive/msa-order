@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application.exception;
+package com.github.attacktive.msaorder.order.adapter;
 
 public class NoSuchProductException extends RuntimeException {
 	public NoSuchProductException(long id) {

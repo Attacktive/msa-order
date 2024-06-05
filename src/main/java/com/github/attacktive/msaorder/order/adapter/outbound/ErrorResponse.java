@@ -1,4 +1,4 @@
-package com.github.attacktive.msaorder.order.application.response;
+package com.github.attacktive.msaorder.order.adapter.outbound;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
