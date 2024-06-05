@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: 'skeleton'
+    name: 'msa-order'
   jackson:
     serialization:
       write-dates-as-timestamps: true
