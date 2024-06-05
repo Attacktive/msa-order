@@ -8,10 +8,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.github.attacktive</groupId>
-	<artifactId>msa-product</artifactId>
+	<artifactId>msa-order</artifactId>
 	<version>1.0.0</version>
-	<name>msa-product</name>
-	<description>msa-product</description>
+	<name>msa-order</name>
+	<description>msa-order</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
