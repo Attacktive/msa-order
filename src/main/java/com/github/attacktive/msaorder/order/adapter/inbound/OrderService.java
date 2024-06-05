@@ -13,8 +13,10 @@ import com.github.attacktive.msaorder.order.port.outbound.OrderPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -63,18 +65,7 @@ public class OrderService implements OrderUseCase {
 	public OrderResponse getOrder(long id) {
 		return orderPort.findById(id)
 			.map(order -> {
-				var productResponse = webClient.get()
-					.uri(uriBuilder -> uriBuilder
-						.path("/")
-						.path(String.valueOf(id))
-						.build()
-					)
-					.retrieve()
-					.toEntity(Product.class)
-					.log()
-					.block();
-
-				var product = ResponseEntityUtils.getBody(productResponse);
+				var product = retrieveProduct(order.productId());
 
 				return new OrderResponse(id, product);
 			})
@@ -83,7 +74,7 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public OrderResponse orderProduct(OrderProductRequest orderProductRequest) {
-		var product = retrieveProduct(orderProductRequest);
+		var product = retrieveProduct(orderProductRequest.productId());
 		var order = orderPort.save(orderProductRequest);
 		return new OrderResponse(order.id(), product);
 	}
@@ -94,7 +85,7 @@ public class OrderService implements OrderUseCase {
 			.map(Order::id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
-		var product = retrieveProduct(changeOrderRequest);
+		var product = retrieveProduct(changeOrderRequest.productId());
 		var order = orderPort.save(changeOrderRequest.withId(productId));
 
 		return new OrderResponse(order.id(), product);
@@ -108,14 +99,15 @@ public class OrderService implements OrderUseCase {
 		orderPort.deleteById(id);
 	}
 
-	private Product retrieveProduct(OrderRequest orderRequest) {
+	private Product retrieveProduct(Long productId) {
 		var productResponse = webClient.get()
 			.uri(uriBuilder -> uriBuilder
 				.path("/")
-				.path(String.valueOf(orderRequest.productId()))
+				.path(String.valueOf(productId))
 				.build()
 			)
 			.retrieve()
+			.onStatus(HttpStatus.NOT_FOUND::equals, clientResponse -> Mono.just(new NoSuchProductException(productId)))
 			.toEntity(Product.class)
 			.log()
 			.block();
