@@ -3,11 +3,13 @@ package com.github.attacktive.msaorder.order.adapter.inbound;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.github.attacktive.msaorder.common.util.ResponseEntityUtils;
 import com.github.attacktive.msaorder.order.adapter.NoSuchProductException;
 import com.github.attacktive.msaorder.order.adapter.outbound.OrderResponse;
-import com.github.attacktive.msaorder.order.adapter.outbound.Product;
-import com.github.attacktive.msaorder.common.util.ResponseEntityUtils;
+import com.github.attacktive.msaorder.order.adapter.outbound.UpdateProductStockRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
+import com.github.attacktive.msaorder.order.domain.Product;
+import com.github.attacktive.msaorder.order.domain.StockManipulationException;
 import com.github.attacktive.msaorder.order.port.inbound.OrderUseCase;
 import com.github.attacktive.msaorder.order.port.outbound.OrderPort;
 import lombok.RequiredArgsConstructor;
@@ -74,9 +76,21 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public OrderResponse orderProduct(OrderProductRequest orderProductRequest) {
-		var product = retrieveProduct(orderProductRequest.productId());
-		var order = orderPort.save(orderProductRequest);
-		return new OrderResponse(order.id(), product);
+		var updateProductStockRequest = new UpdateProductStockRequest(orderProductRequest);
+		var product = updateProductStock(updateProductStockRequest);
+
+		try {
+			var order = orderPort.save(orderProductRequest);
+
+			return new OrderResponse(order.id(), product);
+		} catch (Exception exception) {
+			log.warn(String.format("Order placement (%s) has failed; trying to issue a compensation order.", orderProductRequest), exception);
+
+			var reverseUpdateProductStockRequest = new UpdateProductStockRequest(orderProductRequest, true);
+			updateProductStock(reverseUpdateProductStockRequest);
+
+			throw exception;
+		}
 	}
 
 	@Override
@@ -85,10 +99,21 @@ public class OrderService implements OrderUseCase {
 			.map(Order::id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
-		var product = retrieveProduct(changeOrderRequest.productId());
-		var order = orderPort.save(changeOrderRequest.withId(productId));
+		var updateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest);
+		var product = updateProductStock(updateProductStockRequest);
 
-		return new OrderResponse(order.id(), product);
+		try {
+			var order = orderPort.save(changeOrderRequest.withId(productId));
+
+			return new OrderResponse(order.id(), product);
+		} catch (Exception exception) {
+			log.warn(String.format("Order change (%s) has failed; trying to issue a compensation order.", changeOrderRequest), exception);
+
+			var reverseUpdateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest, true);
+			updateProductStock(reverseUpdateProductStockRequest);
+
+			throw exception;
+		}
 	}
 
 	@Override
@@ -113,5 +138,27 @@ public class OrderService implements OrderUseCase {
 			.block();
 
 		return ResponseEntityUtils.getBody(productResponse);
+	}
+
+	private Product updateProductStock(UpdateProductStockRequest updateProductStockRequest) {
+		log.info("updateProductStock: {}", updateProductStockRequest);
+
+		try {
+			var updateProductStockResponse = webClient.patch()
+				.uri(uriBuilder -> uriBuilder
+					.path("/")
+					.path(String.valueOf(updateProductStockRequest.id()))
+					.build()
+				)
+				.bodyValue(updateProductStockRequest)
+				.retrieve()
+				.toEntity(Product.class)
+				.log()
+				.block();
+
+			return ResponseEntityUtils.getBody(updateProductStockResponse);
+		} catch (Exception exception) {
+			throw new StockManipulationException(exception);
+		}
 	}
 }

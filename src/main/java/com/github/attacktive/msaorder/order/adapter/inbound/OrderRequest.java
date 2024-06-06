@@ -7,4 +7,6 @@ public interface OrderRequest {
 	Long id();
 
 	Long productId();
+
+	Long quantity();
 }
