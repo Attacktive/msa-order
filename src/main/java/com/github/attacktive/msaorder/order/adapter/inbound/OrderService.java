@@ -54,11 +54,11 @@ public class OrderService implements OrderUseCase {
 			.stream()
 			.map(order -> {
 				var product = products.stream()
-					.filter(productCandidate -> productCandidate.id() == order.productId())
+					.filter(productCandidate -> productCandidate.id().equals(order.productId()))
 					.findAny()
 					.orElseThrow(() -> new NoSuchProductException(order.productId()));
 
-				return new OrderResponse(order.id(), product);
+				return new OrderResponse(order.id(), product, order.quantity());
 			})
 			.toList();
 	}
@@ -69,7 +69,7 @@ public class OrderService implements OrderUseCase {
 			.map(order -> {
 				var product = retrieveProduct(order.productId());
 
-				return new OrderResponse(id, product);
+				return new OrderResponse(id, product, order.quantity());
 			})
 			.orElseThrow(() -> new NoSuchProductException(id));
 	}
@@ -82,7 +82,7 @@ public class OrderService implements OrderUseCase {
 		try {
 			var order = orderPort.save(orderProductRequest);
 
-			return new OrderResponse(order.id(), product);
+			return new OrderResponse(order.id(), product, order.quantity());
 		} catch (Exception exception) {
 			log.warn(String.format("Order placement (%s) has failed; trying to issue a compensation order.", orderProductRequest), exception);
 
@@ -105,7 +105,7 @@ public class OrderService implements OrderUseCase {
 		try {
 			var order = orderPort.save(changeOrderRequest.withId(productId));
 
-			return new OrderResponse(order.id(), product);
+			return new OrderResponse(order.id(), product, order.quantity());
 		} catch (Exception exception) {
 			log.warn(String.format("Order change (%s) has failed; trying to issue a compensation order.", changeOrderRequest), exception);
 
