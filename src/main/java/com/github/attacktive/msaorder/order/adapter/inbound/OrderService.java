@@ -86,7 +86,7 @@ public class OrderService implements OrderUseCase {
 		} catch (Exception exception) {
 			log.warn(String.format("Order placement (%s) has failed; trying to issue a compensation order.", orderProductRequest), exception);
 
-			var reverseUpdateProductStockRequest = new UpdateProductStockRequest(orderProductRequest, true);
+			var reverseUpdateProductStockRequest = updateProductStockRequest.reverse();
 			updateProductStock(reverseUpdateProductStockRequest);
 
 			throw exception;
@@ -109,7 +109,7 @@ public class OrderService implements OrderUseCase {
 		} catch (Exception exception) {
 			log.warn(String.format("Order change (%s) has failed; trying to issue a compensation order.", changeOrderRequest), exception);
 
-			var reverseUpdateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest, true);
+			var reverseUpdateProductStockRequest = updateProductStockRequest.reverse();
 			updateProductStock(reverseUpdateProductStockRequest);
 
 			throw exception;
@@ -118,10 +118,22 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void deleteOrder(long id) {
-		orderPort.findById(id)
+		var order = orderPort.findById(id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
-		orderPort.deleteById(id);
+		var updateProductStockRequest = new UpdateProductStockRequest(order.productId(), order.quantity());
+		updateProductStock(updateProductStockRequest);
+
+		try {
+			orderPort.deleteById(id);
+		} catch (Exception exception) {
+			log.warn(String.format("Order deletion (%s) has failed; trying to issue a compensation order.", id), exception);
+
+			var reverseUpdateProductStockRequest = updateProductStockRequest.reverse();
+			updateProductStock(reverseUpdateProductStockRequest);
+
+			throw exception;
+		}
 	}
 
 	private Product retrieveProduct(Long productId) {
