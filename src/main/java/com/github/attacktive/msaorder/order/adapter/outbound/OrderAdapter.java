@@ -9,6 +9,7 @@ import com.github.attacktive.msaorder.order.adapter.inbound.OrderRequest;
 import com.github.attacktive.msaorder.order.domain.Order;
 import com.github.attacktive.msaorder.order.port.outbound.OrderPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class OrderAdapter implements OrderPort {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Order> findAll() {
-		return orderRepository.findAll()
+		return orderRepository.findAll(Sort.by("id"))
 			.stream()
 			.map(OrderEntity::toOrder)
 			.toList();
