@@ -20,14 +20,18 @@ public class OrderEntity {
 
 	private Long productId;
 
+	private Long quantity;
+
 	public OrderEntity(OrderRequest orderRequest) {
 		productId = orderRequest.productId();
+		quantity = orderRequest.quantity();
 	}
 
 	public Order toOrder() {
 		return Order.builder()
 			.id(id)
 			.productId(productId)
+			.quantity(quantity)
 			.build();
 	}
 }
