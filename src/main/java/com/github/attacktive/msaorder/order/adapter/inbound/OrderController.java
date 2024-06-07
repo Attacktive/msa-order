@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +34,20 @@ public class OrderController {
 			responseEntity = new ResponseEntity<>(products, HttpStatus.NO_CONTENT);
 		} else {
 			responseEntity = ResponseEntity.ok(products);
+		}
+
+		return responseEntity;
+	}
+
+	@RequestMapping(method = RequestMethod.HEAD, name = "products")
+	public ResponseEntity<Void> hasOrdersContainingProduct(@RequestParam("product-id") long productId) {
+		ResponseEntity<Void> responseEntity;
+
+		var orderExists = orderUseCase.orderExistsHavingProduct(productId);
+		if (orderExists) {
+			responseEntity = ResponseEntity.ok().build();
+		} else {
+			responseEntity = ResponseEntity.notFound().build();
 		}
 
 		return responseEntity;

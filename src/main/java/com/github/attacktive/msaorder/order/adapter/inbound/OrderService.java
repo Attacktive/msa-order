@@ -65,6 +65,14 @@ public class OrderService implements OrderUseCase {
 	}
 
 	@Override
+	public boolean orderExistsHavingProduct(long targetProductId) {
+		return orderPort.findAll()
+			.stream()
+			.map(Order::productId)
+			.anyMatch(productId -> productId.equals(targetProductId));
+	}
+
+	@Override
 	public OrderResponse getOrder(long id) {
 		return orderPort.findById(id)
 			.map(order -> {

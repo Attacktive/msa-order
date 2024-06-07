@@ -9,6 +9,8 @@ import com.github.attacktive.msaorder.order.adapter.outbound.OrderResponse;
 public interface OrderUseCase {
 	List<OrderResponse> getOrders();
 
+	boolean orderExistsHavingProduct(long targetProductId);
+
 	OrderResponse getOrder(long id);
 
 	OrderResponse orderProduct(OrderProductRequest orderProductRequest);

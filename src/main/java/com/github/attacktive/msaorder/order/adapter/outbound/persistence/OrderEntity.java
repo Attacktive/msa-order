@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private Long productId;
@@ -23,6 +23,7 @@ public class OrderEntity {
 	private Long quantity;
 
 	public OrderEntity(OrderRequest orderRequest) {
+		id = orderRequest.id();
 		productId = orderRequest.productId();
 		quantity = orderRequest.quantity();
 	}
