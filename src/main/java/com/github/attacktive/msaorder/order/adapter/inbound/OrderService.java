@@ -1,5 +1,6 @@
 package com.github.attacktive.msaorder.order.adapter.inbound;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,22 +96,36 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public OrderResponse changeOrder(long id, ChangeOrderRequest changeOrderRequest) {
-		var productId = orderPort.findById(id)
-			.map(Order::id)
+		var order = orderPort.findById(id)
 			.orElseThrow(() -> new NoSuchProductException(id));
 
-		var updateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest);
-		var product = updateProductStock(updateProductStockRequest);
+		List<UpdateProductStockRequest> updateProductStockRequests = new ArrayList<>();
+
+		if (order.productId().equals(changeOrderRequest.productId())) {
+			var stockChange = order.quantity() - changeOrderRequest.quantity();
+
+			var updateProductStockRequest = new UpdateProductStockRequest(order.productId(), stockChange);
+			updateProductStockRequests.add(updateProductStockRequest);
+		} else {
+			// TODO: cancellation
+			var updateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest);
+			updateProductStockRequests.add(updateProductStockRequest);
+		}
+
+		updateProductStockRequests.forEach(this::updateProductStock);
+
+		var product = retrieveProduct(changeOrderRequest.productId());
 
 		try {
-			var order = orderPort.save(changeOrderRequest.withId(productId));
+			order = orderPort.save(changeOrderRequest.withId(order.id()));
 
 			return new OrderResponse(order.id(), product, order.quantity());
 		} catch (Exception exception) {
 			log.warn(String.format("Order change (%s) has failed; trying to issue a compensation order.", changeOrderRequest), exception);
 
-			var reverseUpdateProductStockRequest = updateProductStockRequest.reverse();
-			updateProductStock(reverseUpdateProductStockRequest);
+			updateProductStockRequests.stream()
+				.map(UpdateProductStockRequest::reverse)
+				.forEach(this::updateProductStock);
 
 			throw exception;
 		}
