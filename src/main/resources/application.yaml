@@ -13,6 +13,7 @@ spring:
     username: 'test'
     password: 'test'
   jpa:
+    open-in-view: false
     generate-ddl: true
     show-sql: true
     hibernate:
