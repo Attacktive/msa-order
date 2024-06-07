@@ -107,7 +107,9 @@ public class OrderService implements OrderUseCase {
 			var updateProductStockRequest = new UpdateProductStockRequest(order.productId(), stockChange);
 			updateProductStockRequests.add(updateProductStockRequest);
 		} else {
-			// TODO: cancellation
+			var cancellingUpdateProductStockRequest = new UpdateProductStockRequest(order.productId(), order.quantity());
+			updateProductStockRequests.add(cancellingUpdateProductStockRequest);
+
 			var updateProductStockRequest = new UpdateProductStockRequest(changeOrderRequest);
 			updateProductStockRequests.add(updateProductStockRequest);
 		}
