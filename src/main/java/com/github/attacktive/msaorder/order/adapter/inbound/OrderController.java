@@ -45,14 +45,12 @@ public class OrderController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	// fixme: the @Valid annotation is not working
 	public OrderResponse orderProduct(@RequestBody @Valid OrderProductRequest orderProductRequest) {
 		return orderUseCase.orderProduct(orderProductRequest);
 	}
 
 	@PutMapping("{id}")
 	@ResponseStatus(HttpStatus.OK)
-	// fixme: the @Valid annotation is not working
 	public OrderResponse changeOrder(@PathVariable long id, @RequestBody @Valid ChangeOrderRequest changeOrderRequest) {
 		return orderUseCase.changeOrder(id, changeOrderRequest);
 	}
