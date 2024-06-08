@@ -1,7 +1,9 @@
 package com.github.attacktive.msaorder.order.adapter.inbound;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.github.attacktive.msaorder.common.util.ResponseEntityUtils;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -49,18 +52,22 @@ public class OrderService implements OrderUseCase {
 			.log()
 			.block();
 
-		var products = ResponseEntityUtils.getBody(productsResponse);
+		var products = Optional.ofNullable(productsResponse)
+			.map(ResponseEntity::getBody)
+			.orElseGet(() -> {
+				log.warn("The body of the response is null which probably means there's a dangling order!");
+
+				return Collections.emptyList();
+			});
 
 		return orderPort.findAll()
 			.stream()
-			.map(order -> {
-				var product = products.stream()
-					.filter(productCandidate -> productCandidate.id().equals(order.productId()))
-					.findAny()
-					.orElseThrow(() -> new NoSuchProductException(order.productId()));
-
-				return new OrderResponse(order.id(), product, order.quantity());
-			})
+			.map(order -> products.stream()
+				.filter(productCandidate -> productCandidate.id().equals(order.productId()))
+				.findAny()
+				.map(product -> new OrderResponse(order.id(), product, order.quantity()))
+				.orElseGet(() -> OrderResponse.ofNonExistentProduct(order.id(), order.productId(), order.quantity()))
+			)
 			.toList();
 	}
 
