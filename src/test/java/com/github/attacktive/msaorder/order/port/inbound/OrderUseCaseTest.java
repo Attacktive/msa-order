@@ -51,7 +51,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("getOrders")
-	void testGetOrders() {
+	void testGetOrders() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -77,7 +77,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("orderExistsHavingProduct")
-	void testOrderExistsHavingProduct() {
+	void testOrderExistsHavingProduct() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -91,7 +91,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("getOrder")
-	void testGetOrder() {
+	void testGetOrder() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -111,7 +111,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("changeOrder: the quantity")
-	void testChangeOrderQuantity() {
+	void testChangeOrderQuantity() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -140,7 +140,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("deleteOrder")
-	void testDeleteOrder() {
+	void testDeleteOrder() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -154,7 +154,7 @@ class OrderUseCaseTest {
 
 	@Test
 	@DisplayName("orderProduct")
-	void testOrderProduct() {
+	void testOrderProduct() throws JsonProcessingException {
 		var mockProduct = new Product(1L, "product", "product description", 1000L, 10L);
 		mockExchangeFunction(mockProduct);
 
@@ -171,14 +171,8 @@ class OrderUseCaseTest {
 		Assertions.assertEquals(1, orderRepository.count());
 	}
 
-	private void mockExchangeFunction(Object desiredResponse) {
-		String responseBody;
-
-		try {
-			responseBody = objectMapper.writeValueAsString(desiredResponse);
-		} catch (JsonProcessingException jsonProcessingException) {
-			throw new RuntimeException(jsonProcessingException);
-		}
+	private void mockExchangeFunction(Object desiredResponse) throws JsonProcessingException {
+		var responseBody = objectMapper.writeValueAsString(desiredResponse);
 
 		Mockito.when(exchangeFunction.exchange(Mockito.any(ClientRequest.class)))
 			.thenReturn(
