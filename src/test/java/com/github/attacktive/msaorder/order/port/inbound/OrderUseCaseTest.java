@@ -9,17 +9,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest
@@ -36,29 +37,8 @@ class OrderUseCaseTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Autowired
-	private WebClient webClient;
-
-	@Mock
-	private ExchangeFunction exchangeFunctionMock;
-
-	@BeforeEach
-	void mock() throws JsonProcessingException {
-		var product = new Product(1L, "product", "product description", 1000L, 10L);
-		var responseBody =objectMapper.writeValueAsString(product);
-
-		// fixme: Mocking below does not work. 🤷
-		exchangeFunctionMock = clientRequest -> Mono.just(
-			ClientResponse.create(HttpStatus.OK)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-				.body(responseBody)
-				.build()
-		);
-
-		webClient.mutate()
-			.exchangeFunction(exchangeFunctionMock)
-			.build();
-	}
+	@MockBean
+	private ExchangeFunction exchangeFunction;
 
 	@BeforeEach
 	void truncateTable() {
@@ -68,7 +48,30 @@ class OrderUseCaseTest {
 	@Test
 	@DisplayName("orderProduct")
 	void testOrderProduct() {
+		var product = new Product(1L, "product", "product description", 1000L, 10L);
+		mockExchangeFunction(product);
+
 		var orderProductRequest = new OrderProductRequest(1L, 1L);
 		orderUseCase.orderProduct(orderProductRequest);
+	}
+
+	private void mockExchangeFunction(Object desiredResponse) {
+		String responseBody;
+
+		try {
+			responseBody = objectMapper.writeValueAsString(desiredResponse);
+		} catch (JsonProcessingException jsonProcessingException) {
+			throw new RuntimeException(jsonProcessingException);
+		}
+
+		Mockito.when(exchangeFunction.exchange(Mockito.any(ClientRequest.class)))
+			.thenReturn(
+				Mono.just(
+					ClientResponse.create(HttpStatus.OK)
+						.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+						.body(responseBody)
+						.build()
+				)
+			);
 	}
 }
