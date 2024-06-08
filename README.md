@@ -12,6 +12,7 @@ The frontend to test the microservice can be found [here](https://github.com/Att
 
 - gets a list of orders
   - shows the details of the product instead of the product ID only
+- finds if a specific product is used in an order
 - gets an order by the ID
   - shows the details of the product instead of the product ID only
 - places an order with *a single* product
