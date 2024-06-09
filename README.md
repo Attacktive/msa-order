@@ -5,9 +5,6 @@
 
 It's a minimal example of a [microservice](https://en.wikipedia.org/wiki/Microservices) which manipulates the 'Orders'.
 
-Another microservice about 'Products' can be found [here](https://github.com/Attacktive/msa-product).
-The frontend to test the microservice can be found [here](https://github.com/Attacktive/msa-demo).
-
 ## What It Does
 
 - gets a list of orders
@@ -20,3 +17,8 @@ The frontend to test the microservice can be found [here](https://github.com/Att
 - changes an order
   - an order can't be made with non-existing product
 - deletes an order
+
+## Related Repositories
+
+- Another microservice about 'Products': [msa-product](https://github.com/Attacktive/msa-product)
+- The frontend to test the microservices: [msa-demo](https://github.com/Attacktive/msa-demo)
